@@ -226,7 +226,7 @@ class TransitionDensityWindow(BaseWindow):
                 x=0,
                 y=smax - 0.1,
                 s=(
-                    r"$N_{{traces}}$ = {}\n$N_{{data}}$ = {}\n{} transitions\n".format(
+                    "$N_{{traces}}$ = {}\n$N_{{data}}$ = {}\n{} transitions\n".format(
                         self.data.histData.n_samples,
                         self.data.histData.n_points,
                         len(self.data.tdpData.state_after),

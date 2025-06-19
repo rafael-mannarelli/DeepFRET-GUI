@@ -394,7 +394,7 @@ class HistogramWindow(BaseWindow):
 
         self.canvas.ax_ctr.clear()
 
-        n_equals_txt = r"$N_{{traces}}$ = {}\n$N_{{data}}$ = {}".format(
+        n_equals_txt = "$N_{{traces}}$ = {}\n$N_{{data}}$ = {}".format(
             self.n_samples,
             self.n_points,
         )
