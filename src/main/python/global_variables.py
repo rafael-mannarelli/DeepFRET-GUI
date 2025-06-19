@@ -133,6 +133,10 @@ class GlobalVariables:
     key_histColors = "histColors"
     key_histOverlayPts = "histOverlayPts"
     key_histPtsAlpha = "histPtsAlpha"
+    key_histShowDensity = "histShowDensity"
+    key_histEColor = "histEColor"
+    key_histSColor = "histSColor"
+    key_histCmap = "histCmap"
 
     keys_hist = (
         key_histBandwidth,
@@ -140,6 +144,10 @@ class GlobalVariables:
         key_histColors,
         key_histOverlayPts,
         key_histPtsAlpha,
+        key_histShowDensity,
+        key_histEColor,
+        key_histSColor,
+        key_histCmap,
     )
 
     # ROIs
@@ -201,6 +209,21 @@ class GlobalVariables:
     color_cyan = "cyan"
     color_yellow = "yellow"
     color_white = "white"
+
+    plot_color_options = OrderedDict(
+        (
+            ("orange", color_orange),
+            ("purple", color_purple),
+            ("blue", color_blue),
+            ("green", color_green),
+            ("red", color_red),
+            ("cyan", color_cyan),
+            ("yellow", color_yellow),
+            ("grey", color_grey),
+        )
+    )
+
+    plot_cmap_options = ["plasma", "viridis", "inferno", "magma", "cividis"]
 
     # For model data and classification
     model_classes_full = OrderedDict(

@@ -188,6 +188,83 @@
        </property>
       </widget>
      </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="densityLabel">
+       <property name="text">
+        <string>Show Density:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="densityCheckBox">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="eColorLabel">
+       <property name="text">
+        <string>E Color:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="eColorComboBox">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+       <item><property name="text"><string>orange</string></property></item>
+       <item><property name="text"><string>purple</string></property></item>
+       <item><property name="text"><string>blue</string></property></item>
+       <item><property name="text"><string>green</string></property></item>
+       <item><property name="text"><string>red</string></property></item>
+       <item><property name="text"><string>cyan</string></property></item>
+       <item><property name="text"><string>yellow</string></property></item>
+       <item><property name="text"><string>grey</string></property></item>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="sColorLabel">
+       <property name="text">
+        <string>S Color:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QComboBox" name="sColorComboBox">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+       <item><property name="text"><string>orange</string></property></item>
+       <item><property name="text"><string>purple</string></property></item>
+       <item><property name="text"><string>blue</string></property></item>
+       <item><property name="text"><string>green</string></property></item>
+       <item><property name="text"><string>red</string></property></item>
+       <item><property name="text"><string>cyan</string></property></item>
+       <item><property name="text"><string>yellow</string></property></item>
+       <item><property name="text"><string>grey</string></property></item>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="cmapLabel">
+       <property name="text">
+        <string>Colormap:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QComboBox" name="cmapComboBox">
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
+       </property>
+       <item><property name="text"><string>plasma</string></property></item>
+       <item><property name="text"><string>viridis</string></property></item>
+       <item><property name="text"><string>inferno</string></property></item>
+       <item><property name="text"><string>magma</string></property></item>
+       <item><property name="text"><string>cividis</string></property></item>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
