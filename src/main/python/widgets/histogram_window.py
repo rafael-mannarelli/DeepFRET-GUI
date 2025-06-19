@@ -81,7 +81,7 @@ class HistogramWindow(BaseWindow):
             self, directory=directory
         )  # type: str, str
 
-        self.getHistogramData()
+        self.getHistogramData("all")
 
         if path != "":
             if not path.split("/")[-1].endswith(".txt"):
@@ -169,11 +169,12 @@ class HistogramWindow(BaseWindow):
                 spine.set_linewidth(0.5)
             ax.tick_params(axis="both", colors=gvars.color_gui_text, width=0.5)
 
-    def getHistogramData(self, n_first_frames="spinbox"):
+    def getHistogramData(self, n_first_frames="all"):
         """
         Returns pooled E and S_app data before bleaching, for each trace.
-        The loops take approx. 0.1 ms per trace, and it's too much trouble
-        to lower it further.
+        By default all frames up to bleaching are included. The parameter
+        ``n_first_frames`` can still be set to ``"spinbox"`` to honour the
+        value from the frame selector.
         Also return DD, DA, and Pearson correlation data.
         """
         if n_first_frames == "all":
@@ -237,7 +238,8 @@ class HistogramWindow(BaseWindow):
         self.data.histData.n_samples = self.n_samples
         self.data.histData.n_points = self.n_points
         
-        self.E_un, self.S_un = lib.math.trim_ES(E_app, S_app)
+        self.E_un = np.array(E_app)
+        self.S_un = np.array(S_app)
 
         # Skip ensemble correction if stoichiometry is missing
         if not lib.math.contains_nan(self.S_un):
@@ -258,7 +260,8 @@ class HistogramWindow(BaseWindow):
                     )
                     E_real.extend(E)
                     S_real.extend(S)
-                self.E, self.S = lib.math.trim_ES(E_real, S_real)
+                self.E = np.array(E_real)
+                self.S = np.array(S_real)
                 self.beta = beta
                 self.gamma = gamma
         else:
@@ -489,7 +492,7 @@ class HistogramWindow(BaseWindow):
         """
         corrected = self.ui.applyCorrectionsCheckBox.isChecked()
         try:
-            self.getHistogramData()
+            self.getHistogramData("all")
             for ax in self.canvas.axes:
                 ax.clear()
             if self.E is not None:
