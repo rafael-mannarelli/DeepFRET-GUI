@@ -225,9 +225,9 @@ class TransitionDensityWindow(BaseWindow):
             self.tdp_ax.text(
                 x=0,
                 y=smax - 0.1,
-                s="N = {}\n"
-                "{} transitions\n".format(
+                s="N = {}\n{} points\n{} transitions\n".format(
                     self.data.histData.n_samples,
+                    self.data.histData.n_points,
                     len(self.data.tdpData.state_after),
                 ),
                 color=gvars.color_gui_text,

@@ -31,6 +31,7 @@ class HistogramWindow(BaseWindow):
         self.gauss_params = None
         self.best_k = None
         self.n_samples = None
+        self.n_points = None
         self.len = None
 
         # Plotting parameters
@@ -207,6 +208,7 @@ class HistogramWindow(BaseWindow):
 
         self.len = len(checkedTraces)
         self.n_samples = self.len
+        self.n_points = 0
         alpha = self.getConfig(gvars.key_alphaFactor)
         delta = self.getConfig(gvars.key_deltaFactor)
 
@@ -225,11 +227,16 @@ class HistogramWindow(BaseWindow):
             trace.calculate_stoi()
             DD.append(I_DD[: trace.first_bleach])
             DA.append(I_DA[: trace.first_bleach])
-            lengths.append(len(trace.fret[: trace.first_bleach]))
+            _len = len(trace.fret[: trace.first_bleach])
+            lengths.append(_len)
+            self.n_points += _len
 
-        self.DD = np.concatenate(DD).flatten()
-        self.DA = np.concatenate(DA).flatten()
+        self.DD = np.concatenate(DD).flatten() if len(DD) > 0 else np.array([])
+        self.DA = np.concatenate(DA).flatten() if len(DA) > 0 else np.array([])
 
+        self.data.histData.n_samples = self.n_samples
+        self.data.histData.n_points = self.n_points
+        
         self.E_un, self.S_un = lib.math.trim_ES(E_app, S_app)
 
         # Skip ensemble correction if stoichiometry is missing
@@ -383,10 +390,15 @@ class HistogramWindow(BaseWindow):
 
         self.canvas.ax_ctr.clear()
 
-        n_equals_txt = "N = {}\n".format(self.n_samples)
+        n_equals_txt = "N = {}\n{} points".format(
+            self.n_samples, self.n_points
+        )
 
         self.canvas.ax_ctr.text(
-            x=0, y=0.9, s=n_equals_txt, color=gvars.color_gui_text
+            x=0,
+            y=0.9,
+            s=n_equals_txt,
+            color=gvars.color_gui_text,
         )
 
         if self.gauss_params is not None:
