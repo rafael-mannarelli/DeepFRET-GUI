@@ -1,5 +1,9 @@
 # coding=utf-8
+import os
 import multiprocessing
+
+# Disable GPU to avoid cuDNN initialization errors on systems without CUDA
+os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")
 
 from PyQt5.QtCore import qWarning
 
