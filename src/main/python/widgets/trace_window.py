@@ -76,7 +76,7 @@ class TraceWindow(BaseWindow):
             )
 
         if item.checkState() in (Qt.Checked, Qt.Unchecked):
-            histogram_window.getHistogramData("all")
+            histogram_window.getHistogramData()
             histogram_window.gauss_params = None
             if histogram_window.isVisible():
                 histogram_window.refreshPlot()
