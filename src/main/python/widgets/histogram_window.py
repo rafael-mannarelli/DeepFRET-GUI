@@ -375,7 +375,10 @@ class HistogramWindow(BaseWindow):
                 orientation="horizontal",
             )
 
-        self.canvas.ax_rgt.set_xlim(-0.1, 1.1)
+        # The stoichiometry histogram is oriented horizontally, meaning the
+        # y-axis holds the S values. The limits should therefore be applied to
+        # the y-axis instead of the x-axis to avoid clipping the histogram.
+        self.canvas.ax_rgt.set_ylim(-0.1, 1.1)
 
     def plotCenter(self, corrected):
         """
