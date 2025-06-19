@@ -169,7 +169,7 @@ class HistogramWindow(BaseWindow):
                 spine.set_linewidth(0.5)
             ax.tick_params(axis="both", colors=gvars.color_gui_text, width=0.5)
 
-    def getHistogramData(self, n_first_frames="spinbox"):
+    def getHistogramData(self, n_first_frames="all"):
         """
         Returns pooled E and S_app data before bleaching, for each trace.
         The loops take approx. 0.1 ms per trace, and it's too much trouble
@@ -227,17 +227,17 @@ class HistogramWindow(BaseWindow):
             trace.calculate_stoi()
             DD.append(I_DD[: trace.first_bleach])
             DA.append(I_DA[: trace.first_bleach])
-            _len = len(trace.fret[: trace.first_bleach])
+            _len = len(E)
             lengths.append(_len)
             self.n_points += _len
 
         self.DD = np.concatenate(DD).flatten() if len(DD) > 0 else np.array([])
         self.DA = np.concatenate(DA).flatten() if len(DA) > 0 else np.array([])
 
+        self.E_un, self.S_un = lib.math.trim_ES(E_app, S_app)
+        self.n_points = len(self.E_un)
         self.data.histData.n_samples = self.n_samples
         self.data.histData.n_points = self.n_points
-        
-        self.E_un, self.S_un = lib.math.trim_ES(E_app, S_app)
 
         # Skip ensemble correction if stoichiometry is missing
         if not lib.math.contains_nan(self.S_un):
