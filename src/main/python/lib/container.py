@@ -629,8 +629,8 @@ class HistogramData:
         self.gauss_params = None
         self.best_k = None
 
-        self.n_samples = 0
-        self.n_points = 0
+        self.n_samples = None
+        self.n_points = None
 
         self.trace_median_len = None
 
