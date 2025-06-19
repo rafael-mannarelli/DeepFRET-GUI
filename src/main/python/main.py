@@ -73,6 +73,14 @@ class AppContext(ApplicationContext):
         userConfigFile = self.getUserConfigFile()
 
         self.config = ConfigObj(str(userConfigFile))
+        default_cfg = ConfigObj(self.get_resource("default_config.ini"))
+        updated = False
+        for key, value in default_cfg.items():
+            if key not in self.config:
+                self.config[key] = value
+                updated = True
+        if updated:
+            self.config.write()
 
     def getUserConfigFile(self):
         """

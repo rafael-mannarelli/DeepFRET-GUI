@@ -115,20 +115,44 @@ class DensityWindowInspector(SheetInspector):
                     raise NotImplementedError
 
             self.ui.overlayCheckBox.clicked.connect(parent.refreshPlot)
+            self.ui.densityCheckBox.clicked.connect(parent.refreshPlot)
+            self.ui.eColorComboBox.currentTextChanged.connect(parent.refreshPlot)
+            self.ui.sColorComboBox.currentTextChanged.connect(parent.refreshPlot)
+            self.ui.cmapComboBox.currentTextChanged.connect(parent.refreshPlot)
 
     def setUi(self):
         """
         Setup UI according to last saved preferences.
         """
-        bandwidth, resolution, n_colors, overlay_pts, pts_alpha = [
-            self.getConfig(key) for key in self.keys
-        ]
+        values = [self.getConfig(key) for key in self.keys]
+
+        # First five values are common to both histogram and TDP windows
+        (
+            bandwidth,
+            resolution,
+            n_colors,
+            overlay_pts,
+            pts_alpha,
+        ) = values[:5]
+
+        # Additional histogram-specific settings
+        if len(self.keys) > 5:
+            show_density, e_color, s_color, cmap = values[5:9]
+        else:
+            show_density = self.getConfig(gvars.key_histShowDensity)
+            e_color = self.getConfig(gvars.key_histEColor)
+            s_color = self.getConfig(gvars.key_histSColor)
+            cmap = self.getConfig(gvars.key_histCmap)
 
         self.ui.smoothingSlider.setValue(bandwidth)
         self.ui.resolutionSlider.setValue(resolution)
         self.ui.colorSlider.setValue(n_colors)
         self.ui.overlayCheckBox.setChecked(bool(overlay_pts))
         self.ui.pointAlphaSlider.setValue(pts_alpha)
+        self.ui.densityCheckBox.setChecked(bool(show_density))
+        self.ui.eColorComboBox.setCurrentText(str(e_color))
+        self.ui.sColorComboBox.setCurrentText(str(s_color))
+        self.ui.cmapComboBox.setCurrentText(str(cmap))
 
     def returnInspectorValues(self):
         """
@@ -139,8 +163,31 @@ class DensityWindowInspector(SheetInspector):
         n_colors = self.ui.colorSlider.value()
         overlay_pts = self.ui.overlayCheckBox.isChecked()
         pts_alpha = self.ui.pointAlphaSlider.value()
+        show_density = self.ui.densityCheckBox.isChecked()
+        e_color = self.ui.eColorComboBox.currentText()
+        s_color = self.ui.sColorComboBox.currentText()
+        cmap = self.ui.cmapComboBox.currentText()
 
-        return bandwidth, resolution, n_colors, overlay_pts, pts_alpha
+        if len(self.keys) > 5:
+            return (
+                bandwidth,
+                resolution,
+                n_colors,
+                overlay_pts,
+                pts_alpha,
+                show_density,
+                e_color,
+                s_color,
+                cmap,
+            )
+        else:
+            return (
+                bandwidth,
+                resolution,
+                n_colors,
+                overlay_pts,
+                pts_alpha,
+            )
 
 
 class CorrectionFactorInspector(SheetInspector):

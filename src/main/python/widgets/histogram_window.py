@@ -316,7 +316,7 @@ class HistogramWindow(BaseWindow):
         self.canvas.ax_rgt.set_ylabel(r"$\mathbf{S}$")
         self.canvas.ax_rgt.yaxis.set_label_position("right")
 
-    def plotTop(self, corrected):
+    def plotTop(self, corrected, color=None):
         """
         Plots the top left top marginal histogram (E).
         """
@@ -327,7 +327,7 @@ class HistogramWindow(BaseWindow):
             self.canvas.ax_top.hist(
                 E,
                 bins=self.marg_bins,
-                color=gvars.color_orange,
+                color=color or gvars.color_orange,
                 alpha=0.8,
                 density=True,
                 histtype="stepfilled",
@@ -356,7 +356,7 @@ class HistogramWindow(BaseWindow):
 
             self.canvas.ax_top.set_xlim(-0.1, 1.1)
 
-    def plotRight(self, corrected):
+    def plotRight(self, corrected, color=None):
         """
         Plots the top left right marginal histogram (S).
         """
@@ -368,7 +368,7 @@ class HistogramWindow(BaseWindow):
             self.canvas.ax_rgt.hist(
                 S,
                 bins=self.marg_bins,
-                color=gvars.color_purple,
+                color=color or gvars.color_purple,
                 alpha=0.8,
                 density=True,
                 histtype="stepfilled",
@@ -380,20 +380,25 @@ class HistogramWindow(BaseWindow):
         # the y-axis instead of the x-axis to avoid clipping the histogram.
         self.canvas.ax_rgt.set_ylim(-0.1, 1.1)
 
-    def plotCenter(self, corrected):
+    def plotCenter(self, corrected, params):
         """
         Plots the top left center E+S contour plot.
         """
         S = self.S if corrected else self.S_un
         E = self.E if corrected else self.E_un
 
-        params = self.inspectors[
-            gvars.DensityWindowInspector
-        ].returnInspectorValues()
-        bandwidth, resolution, n_colors, overlay_pts, pts_alpha = params
-        self.inspectors[gvars.DensityWindowInspector].setInspectorConfigs(
-            params
-        )
+        (
+            bandwidth,
+            resolution,
+            n_colors,
+            overlay_pts,
+            pts_alpha,
+            show_density,
+            _e_color,
+            _s_color,
+            cmap,
+        ) = params
+        self.inspectors[gvars.DensityWindowInspector].setInspectorConfigs(params)
 
         self.canvas.ax_ctr.clear()
 
@@ -437,15 +442,16 @@ class HistogramWindow(BaseWindow):
             )
 
         if S is not None:
-            c = lib.math.contour_2d(
-                xdata=E,
-                ydata=S,
-                bandwidth=bandwidth / 200,
-                resolution=resolution,
-                kernel="linear",
-                n_colors=n_colors,
-            )
-            self.canvas.ax_ctr.contourf(*c, cmap="plasma")
+            if show_density:
+                c = lib.math.contour_2d(
+                    xdata=E,
+                    ydata=S,
+                    bandwidth=bandwidth / 200,
+                    resolution=resolution,
+                    kernel="linear",
+                    n_colors=n_colors,
+                )
+                self.canvas.ax_ctr.contourf(*c, cmap=cmap)
 
             if overlay_pts:
                 # Conversion factor, because sliders can't do [0,1]
@@ -457,10 +463,22 @@ class HistogramWindow(BaseWindow):
             )
 
     def plotAll(self, corrected):
-        self.plotTop(corrected)
+        params = self.inspectors[gvars.DensityWindowInspector].returnInspectorValues()
+        (
+            bandwidth,
+            resolution,
+            n_colors,
+            overlay_pts,
+            pts_alpha,
+            show_density,
+            e_color,
+            s_color,
+            cmap,
+        ) = params
+        self.plotTop(corrected, color=gvars.plot_color_options.get(e_color, e_color))
         if self.S is not None:
-            self.plotCenter(corrected)
-            self.plotRight(corrected)
+            self.plotCenter(corrected, params)
+            self.plotRight(corrected, color=gvars.plot_color_options.get(s_color, s_color))
 
         self.canvas.draw()
 

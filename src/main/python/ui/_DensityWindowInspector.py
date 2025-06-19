@@ -95,6 +95,40 @@ class Ui_DensityWindowInspector(object):
         self.overlayCheckBox.setText("")
         self.overlayCheckBox.setObjectName("overlayCheckBox")
         self.gridLayout_2.addWidget(self.overlayCheckBox, 4, 1, 1, 1)
+        self.densityLabel = QtWidgets.QLabel(DensityWindowInspector)
+        self.densityLabel.setObjectName("densityLabel")
+        self.gridLayout_2.addWidget(self.densityLabel, 5, 0, 1, 1)
+        self.densityCheckBox = QtWidgets.QCheckBox(DensityWindowInspector)
+        self.densityCheckBox.setText("")
+        self.densityCheckBox.setObjectName("densityCheckBox")
+        self.gridLayout_2.addWidget(self.densityCheckBox, 5, 1, 1, 1)
+        self.eColorLabel = QtWidgets.QLabel(DensityWindowInspector)
+        self.eColorLabel.setObjectName("eColorLabel")
+        self.gridLayout_2.addWidget(self.eColorLabel, 6, 0, 1, 1)
+        self.eColorComboBox = QtWidgets.QComboBox(DensityWindowInspector)
+        self.eColorComboBox.setSizeAdjustPolicy(
+            QtWidgets.QComboBox.AdjustToContents
+        )
+        self.eColorComboBox.setObjectName("eColorComboBox")
+        self.gridLayout_2.addWidget(self.eColorComboBox, 6, 1, 1, 1)
+        self.sColorLabel = QtWidgets.QLabel(DensityWindowInspector)
+        self.sColorLabel.setObjectName("sColorLabel")
+        self.gridLayout_2.addWidget(self.sColorLabel, 7, 0, 1, 1)
+        self.sColorComboBox = QtWidgets.QComboBox(DensityWindowInspector)
+        self.sColorComboBox.setSizeAdjustPolicy(
+            QtWidgets.QComboBox.AdjustToContents
+        )
+        self.sColorComboBox.setObjectName("sColorComboBox")
+        self.gridLayout_2.addWidget(self.sColorComboBox, 7, 1, 1, 1)
+        self.cmapLabel = QtWidgets.QLabel(DensityWindowInspector)
+        self.cmapLabel.setObjectName("cmapLabel")
+        self.gridLayout_2.addWidget(self.cmapLabel, 8, 0, 1, 1)
+        self.cmapComboBox = QtWidgets.QComboBox(DensityWindowInspector)
+        self.cmapComboBox.setSizeAdjustPolicy(
+            QtWidgets.QComboBox.AdjustToContents
+        )
+        self.cmapComboBox.setObjectName("cmapComboBox")
+        self.gridLayout_2.addWidget(self.cmapComboBox, 8, 1, 1, 1)
         self.gridLayout.addLayout(self.gridLayout_2, 4, 0, 1, 1)
 
         self.retranslateUi(DensityWindowInspector)
@@ -118,6 +152,28 @@ class Ui_DensityWindowInspector(object):
         self.label.setText(
             _translate("DensityWindowInspector", "Overlay Alpha:")
         )
+        self.densityLabel.setText(
+            _translate("DensityWindowInspector", "Show Density:")
+        )
+        self.eColorLabel.setText(_translate("DensityWindowInspector", "E Color:"))
+        self.sColorLabel.setText(_translate("DensityWindowInspector", "S Color:"))
+        self.cmapLabel.setText(_translate("DensityWindowInspector", "Colormap:"))
+
+        for name in [
+            "orange",
+            "purple",
+            "blue",
+            "green",
+            "red",
+            "cyan",
+            "yellow",
+            "grey",
+        ]:
+            self.eColorComboBox.addItem(name)
+            self.sColorComboBox.addItem(name)
+
+        for cm in ["plasma", "viridis", "inferno", "magma", "cividis"]:
+            self.cmapComboBox.addItem(cm)
 
 
 if __name__ == "__main__":
