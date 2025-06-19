@@ -125,17 +125,24 @@ class DensityWindowInspector(SheetInspector):
         Setup UI according to last saved preferences.
         """
         values = [self.getConfig(key) for key in self.keys]
+
+        # First five values are common to both histogram and TDP windows
         (
             bandwidth,
             resolution,
             n_colors,
             overlay_pts,
             pts_alpha,
-            show_density,
-            e_color,
-            s_color,
-            cmap,
-        ) = values
+        ) = values[:5]
+
+        # Additional histogram-specific settings
+        if len(self.keys) > 5:
+            show_density, e_color, s_color, cmap = values[5:9]
+        else:
+            show_density = self.getConfig(gvars.key_histShowDensity)
+            e_color = self.getConfig(gvars.key_histEColor)
+            s_color = self.getConfig(gvars.key_histSColor)
+            cmap = self.getConfig(gvars.key_histCmap)
 
         self.ui.smoothingSlider.setValue(bandwidth)
         self.ui.resolutionSlider.setValue(resolution)
@@ -161,17 +168,26 @@ class DensityWindowInspector(SheetInspector):
         s_color = self.ui.sColorComboBox.currentText()
         cmap = self.ui.cmapComboBox.currentText()
 
-        return (
-            bandwidth,
-            resolution,
-            n_colors,
-            overlay_pts,
-            pts_alpha,
-            show_density,
-            e_color,
-            s_color,
-            cmap,
-        )
+        if len(self.keys) > 5:
+            return (
+                bandwidth,
+                resolution,
+                n_colors,
+                overlay_pts,
+                pts_alpha,
+                show_density,
+                e_color,
+                s_color,
+                cmap,
+            )
+        else:
+            return (
+                bandwidth,
+                resolution,
+                n_colors,
+                overlay_pts,
+                pts_alpha,
+            )
 
 
 class CorrectionFactorInspector(SheetInspector):
