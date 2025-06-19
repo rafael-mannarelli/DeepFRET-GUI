@@ -769,12 +769,16 @@ class BaseWindow(QMainWindow):
             trace for trace in self.data.traces.values() if trace.is_checked
         ]
         self.data.histData.n_samples = len(checkedTraces)
+        self.data.histData.n_points = 0
 
         try:
             transitions = pd.concat(
                 [trace.transitions for trace in checkedTraces]
             )
             transitions.reset_index(inplace=True)
+
+            for trace in checkedTraces:
+                self.data.histData.n_points += trace.first_bleach
 
             self.data.tdpData.state_lifetime = transitions["lifetime"]
             self.data.tdpData.state_before = transitions["e_before"]

@@ -630,6 +630,7 @@ class HistogramData:
         self.best_k = None
 
         self.n_samples = None
+        self.n_points = None
 
         self.trace_median_len = None
 
