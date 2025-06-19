@@ -380,20 +380,25 @@ class HistogramWindow(BaseWindow):
         # the y-axis instead of the x-axis to avoid clipping the histogram.
         self.canvas.ax_rgt.set_ylim(-0.1, 1.1)
 
-    def plotCenter(self, corrected):
+    def plotCenter(self, corrected, params):
         """
         Plots the top left center E+S contour plot.
         """
         S = self.S if corrected else self.S_un
         E = self.E if corrected else self.E_un
 
-        params = self.inspectors[
-            gvars.DensityWindowInspector
-        ].returnInspectorValues()
-        bandwidth, resolution, n_colors, overlay_pts, pts_alpha = params
-        self.inspectors[gvars.DensityWindowInspector].setInspectorConfigs(
-            params
-        )
+        (
+            bandwidth,
+            resolution,
+            n_colors,
+            overlay_pts,
+            pts_alpha,
+            show_density,
+            _e_color,
+            _s_color,
+            cmap,
+        ) = params
+        self.inspectors[gvars.DensityWindowInspector].setInspectorConfigs(params)
 
         self.canvas.ax_ctr.clear()
 
@@ -472,7 +477,7 @@ class HistogramWindow(BaseWindow):
         ) = params
         self.plotTop(corrected, color=gvars.plot_color_options.get(e_color, e_color))
         if self.S is not None:
-            self.plotCenter(corrected)
+            self.plotCenter(corrected, params)
             self.plotRight(corrected, color=gvars.plot_color_options.get(s_color, s_color))
 
         self.canvas.draw()
