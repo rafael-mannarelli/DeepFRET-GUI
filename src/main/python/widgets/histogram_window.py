@@ -274,7 +274,7 @@ class HistogramWindow(BaseWindow):
         corrected = self.ui.applyCorrectionsCheckBox.isChecked()
         E = self.E if corrected else self.E_un
 
-        if E is not None:
+        if E is not None and len(E) >= 2:
             n_components = (
                 (1, 6) if states == "auto" else self.ui.gaussianSpinBox.value()
             )
@@ -290,6 +290,10 @@ class HistogramWindow(BaseWindow):
 
             self.ui.gaussianSpinBox.setValue(self.best_k)
             self.ui.gaussianSpinBox.repaint()
+        else:
+            self.gauss_params = None
+            self.best_k = None
+
         self.refreshPlot()
 
     def plotDefaultElements(self):
