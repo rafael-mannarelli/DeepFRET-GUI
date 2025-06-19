@@ -103,13 +103,17 @@ class HistogramWindow(BaseWindow):
             else:
                 df = pd.DataFrame({"E": [], "S": []})
 
+            ntraces_txt = "N_traces: {}".format(self.n_samples)
+
             with open(path, "w") as f:
                 f.write(
                     "{0}\n"
-                    "{1}\n\n"
-                    "{2}".format(
+                    "{1}\n"
+                    "{2}\n\n"
+                    "{3}".format(
                         exp_txt,
                         date_txt,
+                        ntraces_txt,
                         df.to_csv(index=False, sep="\t", na_rep="NaN"),
                     )
                 )

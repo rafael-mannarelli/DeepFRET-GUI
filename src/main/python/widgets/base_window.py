@@ -750,13 +750,22 @@ class BaseWindow(QMainWindow):
             else:
                 df = pd.DataFrame({"E": [], "S": []})
 
+            n_traces = self.data.histData.n_samples
+            if n_traces is None:
+                n_traces = len(
+                    [t for t in self.data.traces.values() if t.is_checked]
+                )
+            ntraces_txt = "N_traces: {}".format(n_traces)
+
             with open(path, "w") as f:
                 f.write(
                     "{0}\n"
-                    "{1}\n\n"
-                    "{2}".format(
+                    "{1}\n"
+                    "{2}\n\n"
+                    "{3}".format(
                         exp_txt,
                         date_txt,
+                        ntraces_txt,
                         df.to_csv(index=False, sep="\t", na_rep="NaN"),
                     )
                 )
