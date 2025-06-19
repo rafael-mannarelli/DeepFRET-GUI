@@ -2,10 +2,16 @@
 import os
 import multiprocessing
 
-# Disable GPU to avoid cuDNN initialization errors on systems without CUDA
-os.environ.setdefault("CUDA_VISIBLE_DEVICES", "-1")
-
 from PyQt5.QtCore import qWarning
+import tensorflow as tf
+
+gpus = tf.config.experimental.list_physical_devices("GPU")
+if gpus:
+    try:
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+    except Exception as e:  # pragma: no cover - just a safety net
+        qWarning("Could not set GPU memory growth: {}".format(e))
 
 from widgets.base_window import AboutWindow, BaseWindow, PreferencesWindow
 from widgets.histogram_window import HistogramWindow
