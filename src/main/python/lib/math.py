@@ -429,7 +429,7 @@ def seq_probabilities(
     yi: np.ndarray,
     skip_threshold: float = 0.5,
     p_bleach_column: int = 0,
-    min_frames: int = 15,
+    min_frames: int = 5,
 ) -> Tuple[np.ndarray, np.ndarray, Union[int, None]]:
     """
     Calculates class-wise probabilities over the entire trace for a one-hot
@@ -443,7 +443,7 @@ def seq_probabilities(
 
     p = yi[yi[:, p_bleach_column] < skip_threshold]
 
-    # Don't base confidence on anything less than 15 frames
+    # Don't base confidence on anything less than 5 frames
     if bleach_frame is None or bleach_frame > min_frames:
         # Sum frame values for each class
         p = p.sum(axis=0) / len(p)

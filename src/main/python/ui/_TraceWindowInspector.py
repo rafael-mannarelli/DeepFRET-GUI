@@ -99,7 +99,7 @@ class Ui_TraceWindowInspector(object):
             QtWidgets.QAbstractSpinBox.NoButtons
         )
         self.spinBoxMinFrames.setMaximum(1000)
-        self.spinBoxMinFrames.setProperty("value", 15)
+        self.spinBoxMinFrames.setProperty("value", 5)
         self.spinBoxMinFrames.setObjectName("spinBoxMinFrames")
         self.gridLayout_2.addWidget(self.spinBoxMinFrames, 4, 1, 1, 2)
         self.pushButtonFind = QtWidgets.QPushButton(TraceWindowInspector)
