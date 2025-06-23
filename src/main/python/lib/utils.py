@@ -193,6 +193,14 @@ def sim_to_ascii(df, trace_len, outdir):
         vid_txt = "Video filename: {}".format(None)
         id_txt = "FRET pair #{}".format(idx)
         bl_txt = "Bleaches at {}".format(trace["fb"].values[0])
+        blink_txt = "Blink intervals: None"
+        if "blink_intervals" in trace.columns:
+            intervals = trace["blink_intervals"].values[0]
+            if intervals:
+                blink_str = ";".join(
+                    f"{int(s)}-{int(e)}" for s, e in intervals
+                )
+                blink_txt = f"Blink intervals: {blink_str}"
 
         with open(path, "w") as f:
             f.write(
@@ -200,13 +208,15 @@ def sim_to_ascii(df, trace_len, outdir):
                 "{1}\n"
                 "{2}\n"
                 "{3}\n"
-                "{4}\n\n"
-                "{5}".format(
+                "{4}\n"
+                "{5}\n\n"
+                "{6}".format(
                     exp_txt,
                     date_txt,
                     vid_txt,
                     id_txt,
                     bl_txt,
+                    blink_txt,
                     df.to_csv(index=False, sep="\t"),
                 )
             )

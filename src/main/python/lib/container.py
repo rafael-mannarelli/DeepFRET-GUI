@@ -311,7 +311,23 @@ class TraceContainer:
             self.grn.bleach = self.first_bleach
             self.acc.bleach = self.first_bleach
             # TODO: consider changing this to be a property of TraceContainer
+        except (ValueError, AttributeError):
+            pass
 
+        try:
+            blink = lib.utils.seek_line(
+                path=self.filename, line_starts="Blink intervals"
+            )
+            if blink is not None:
+                blink_str = blink.split(":")[-1].strip()
+                if blink_str != "None":
+                    intervals = []
+                    for pair in blink_str.split(";"):
+                        if not pair:
+                            continue
+                        start, end = pair.split("-")
+                        intervals.append([int(start), int(end)])
+                    self.blink_intervals = intervals
         except (ValueError, AttributeError):
             pass
 
@@ -510,19 +526,28 @@ class TraceContainer:
         vid_txt = "Video filename: {}".format(self.video)
         id_txt = "FRET pair #{}".format(self.n)
         bl_txt = "Bleaches at {}".format(self.first_bleach)
+        if self.blink_intervals:
+            blink_str = ";".join(
+                f"{s}-{e}" for s, e in self.blink_intervals if e is not None
+            )
+        else:
+            blink_str = "None"
+        blink_txt = "Blink intervals: {}".format(blink_str)
 
         return (
             "{0}\n"
             "{1}\n"
             "{2}\n"
             "{3}\n"
-            "{4}\n\n"
-            "{5}".format(
+            "{4}\n"
+            "{5}\n\n"
+            "{6}".format(
                 exp_txt,
                 date_txt,
                 vid_txt,
                 id_txt,
                 bl_txt,
+                blink_txt,
                 df.to_csv(index=False, sep="\t", na_rep="NaN"),
             )
         )
