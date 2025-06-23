@@ -17,6 +17,7 @@ from ui._AboutWindow import Ui_About
 from ui._MenuBar import Ui_MenuBar
 from ui._PreferencesWindow import Ui_Preferences
 from widgets.misc import ExportDialog, ListView
+import lib.math
 
 
 class BaseWindow(QMainWindow):
@@ -799,22 +800,11 @@ class BaseWindow(QMainWindow):
             self.data.tdpData.state_after = None
 
         for trace in checkedTraces:
-            end = trace.first_bleach
-            if end is None:
-                end = len(trace.get_intensities()[0])
-
-            if trace.blink_intervals:
-                mask = np.ones(end, dtype=bool)
-                for start, stop in trace.blink_intervals:
-                    if stop is None:
-                        continue
-                    s = max(0, start)
-                    e = min(stop, end)
-                    if s < e:
-                        mask[s:e] = False
-                end = int(mask.sum())
-
-            self.data.histData.n_points += end
+            length = len(trace.get_intensities()[0])
+            n_valid = lib.math.count_valid_frames(
+                length, trace.first_bleach, trace.blink_intervals
+            )
+            self.data.histData.n_points += n_valid
 
     def exportTransitionDensityData(self):
         """

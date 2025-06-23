@@ -215,7 +215,7 @@ class TraceWindow(BaseWindow):
             for n, ax in enumerate(self.canvas.axes):
                 if ax == event.inaxes and n in [1, 2]:
                     # Register xdata
-                    clickedx = int(event.xdata)
+                    clickedx = max(0, int(round(event.xdata)) - 1)
 
                     self.currentTrace().xdata.append(clickedx)
                     # Third click resets the (min, max) range
@@ -485,7 +485,7 @@ class TraceWindow(BaseWindow):
             for n, ax in enumerate(self.canvas.axes):
                 if ax == event.inaxes and n in [1, 2]:
                     # Register xdata
-                    clickedx = int(event.xdata)
+                    clickedx = max(0, int(round(event.xdata)) - 1)
 
                     if color == "green":
                         self.currentTrace().grn.bleach = clickedx
@@ -532,7 +532,7 @@ class TraceWindow(BaseWindow):
         if self.currName is not None:
             for n, ax in enumerate(self.canvas.axes):
                 if ax == event.inaxes and n in [1, 2]:
-                    clickedx = int(event.xdata)
+                    clickedx = max(0, int(round(event.xdata)) - 1)
                     trace = self.currentTrace()
                     if not trace.blink_intervals or trace.blink_intervals[-1][1] is not None:
                         trace.blink_intervals.append([clickedx, None])

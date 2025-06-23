@@ -183,6 +183,25 @@ def exclude_blink_intervals(array: np.ndarray, intervals: Optional[List[Tuple[in
     return array[mask]
 
 
+def count_valid_frames(length: int, bleach: Optional[int], intervals: Optional[List[Tuple[int, int]]]) -> int:
+    """Return the number of frames up to ``bleach`` excluding ``intervals``."""
+
+    if bleach is None or bleach > length:
+        bleach = length
+
+    mask = np.ones(bleach, dtype=bool)
+    if intervals:
+        for start, stop in intervals:
+            if stop is None:
+                continue
+            s = max(0, start)
+            e = min(stop, bleach)
+            if s < e:
+                mask[s:e] = False
+
+    return int(mask.sum())
+
+
 def alpha_factor(DD, DA):
     """
     Alpha factor for donor-only population.
