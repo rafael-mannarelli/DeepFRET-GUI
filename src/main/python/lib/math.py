@@ -165,6 +165,21 @@ def drop_bleached_frames(
     return E_trace_, S_trace_
 
 
+def exclude_blink_intervals(array: np.ndarray, intervals: Optional[List[Tuple[int, int]]]):
+    """Return a copy of ``array`` without the regions specified in ``intervals``."""
+
+    if not intervals:
+        return array
+
+    mask = np.ones_like(array, dtype=bool)
+    for start, end in intervals:
+        if end is None:
+            continue
+        mask[start:end] = False
+
+    return array[mask]
+
+
 def alpha_factor(DD, DA):
     """
     Alpha factor for donor-only population.

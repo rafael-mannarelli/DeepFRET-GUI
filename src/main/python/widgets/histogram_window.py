@@ -230,8 +230,16 @@ class HistogramWindow(BaseWindow):
             S_app.extend(S)
             _, I_DD, I_DA, I_AA = lib.math.correct_DA(trace.get_intensities())
             trace.calculate_stoi()
-            DD.append(I_DD[: trace.first_bleach])
-            DA.append(I_DA[: trace.first_bleach])
+
+            I_DD = lib.math.exclude_blink_intervals(
+                I_DD[: trace.first_bleach], trace.blink_intervals
+            )
+            I_DA = lib.math.exclude_blink_intervals(
+                I_DA[: trace.first_bleach], trace.blink_intervals
+            )
+
+            DD.append(I_DD)
+            DA.append(I_DA)
             _len = len(E)
             lengths.append(_len)
             self.n_points += _len
