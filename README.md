@@ -10,6 +10,7 @@ FRET (smFRET) fast and efficiently. The key feature is reverse-loading of ASCII 
 - Memory-free movie batch loading
 - Distribution plotting and fitting
 - Backwards-compatibility with iSMS-exported data
+- Manual blinking interval selection and export
 
 If you'd like to play around with just the Keras/TensorFlow model, please go to https://github.com/komodovaran/DeepFRET-Model
 
