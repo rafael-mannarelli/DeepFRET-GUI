@@ -231,11 +231,15 @@ class HistogramWindow(BaseWindow):
             _, I_DD, I_DA, I_AA = lib.math.correct_DA(trace.get_intensities())
             trace.calculate_stoi()
 
+            end_frame = trace.first_bleach
+            if end_frame is None:
+                end_frame = len(I_DD)
+
             I_DD = lib.math.exclude_blink_intervals(
-                I_DD[: trace.first_bleach], trace.blink_intervals
+                I_DD[: end_frame], trace.blink_intervals
             )
             I_DA = lib.math.exclude_blink_intervals(
-                I_DA[: trace.first_bleach], trace.blink_intervals
+                I_DA[: end_frame], trace.blink_intervals
             )
 
             DD.append(I_DD)

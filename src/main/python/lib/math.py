@@ -144,6 +144,9 @@ def drop_bleached_frames(
 
     bleach = min_real(bleaches)
 
+    if bleach is None:
+        bleach = len(intensities[0])
+
     if beta == 1 and gamma == 1:
         E_trace = calc_E(intensities, alpha, delta)
         S_trace = calc_S(intensities, alpha, delta)
