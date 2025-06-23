@@ -224,13 +224,26 @@ class HistogramWindow(BaseWindow):
                 alpha=alpha,
                 delta=delta,
                 max_frames=n_first_frames,
+                blink_intervals=trace.blink_intervals,
             )
             E_app.extend(E)
             S_app.extend(S)
             _, I_DD, I_DA, I_AA = lib.math.correct_DA(trace.get_intensities())
             trace.calculate_stoi()
-            DD.append(I_DD[: trace.first_bleach])
-            DA.append(I_DA[: trace.first_bleach])
+
+            end_frame = trace.first_bleach
+            if end_frame is None:
+                end_frame = len(I_DD)
+
+            I_DD = lib.math.exclude_blink_intervals(
+                I_DD[: end_frame], trace.blink_intervals
+            )
+            I_DA = lib.math.exclude_blink_intervals(
+                I_DA[: end_frame], trace.blink_intervals
+            )
+
+            DD.append(I_DD)
+            DA.append(I_DA)
             _len = len(E)
             lengths.append(_len)
             self.n_points += _len
@@ -259,6 +272,7 @@ class HistogramWindow(BaseWindow):
                         beta=beta,
                         gamma=gamma,
                         max_frames=n_first_frames,
+                        blink_intervals=trace.blink_intervals,
                     )
                     E_real.extend(E)
                     S_real.extend(S)

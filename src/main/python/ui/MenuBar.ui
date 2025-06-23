@@ -130,6 +130,12 @@
      <addaction name="actionSelect_Bleach_Red_Channel"/>
      <addaction name="actionSelect_Bleach_Green_Channel"/>
     </widget>
+    <widget class="QMenu" name="menuManually_Select_Blinking">
+     <property name="title">
+      <string>Manually Select Blinking</string>
+     </property>
+     <addaction name="actionSelect_Blink_Interval"/>
+    </widget>
     <widget class="QMenu" name="menuPredict_Trace_Type">
      <property name="title">
       <string>Predict Trace Type</string>
@@ -154,6 +160,7 @@
     <addaction name="actionClear_Correction_Factors"/>
     <addaction name="separator"/>
     <addaction name="menuManually_Select_Bleaching"/>
+    <addaction name="menuManually_Select_Blinking"/>
     <addaction name="separator"/>
     <addaction name="actionFit_Hmm_Selected"/>
     <addaction name="menuPredict_Trace_Type"/>
@@ -581,6 +588,14 @@
    </property>
    <property name="text">
     <string>Green Channel</string>
+   </property>
+  </action>
+  <action name="actionSelect_Blink_Interval">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Blink Interval</string>
    </property>
   </action>
   <action name="actionAdvanced_Sort">

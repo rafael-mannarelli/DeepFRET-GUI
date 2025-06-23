@@ -17,6 +17,7 @@ from ui._AboutWindow import Ui_About
 from ui._MenuBar import Ui_MenuBar
 from ui._PreferencesWindow import Ui_Preferences
 from widgets.misc import ExportDialog, ListView
+import lib.math
 
 
 class BaseWindow(QMainWindow):
@@ -173,6 +174,9 @@ class BaseWindow(QMainWindow):
 
         for f in (partial(self.triggerBleach, "green"), self.refreshPlot):
             self.ui.actionSelect_Bleach_Green_Channel.triggered.connect(f)
+
+        for f in (self.triggerBlink, self.refreshPlot):
+            self.ui.actionSelect_Blink_Interval.triggered.connect(f)
 
         # self.ui.actionFit_Hmm_Current.triggered.connect(
         #     partial(self.fitSingleTraceHiddenMarkovModel, True)
@@ -782,12 +786,9 @@ class BaseWindow(QMainWindow):
 
         try:
             transitions = pd.concat(
-                [trace.transitions for trace in checkedTraces]
+                [t.transitions for t in checkedTraces if t.transitions is not None]
             )
             transitions.reset_index(inplace=True)
-
-            for trace in checkedTraces:
-                self.data.histData.n_points += trace.first_bleach
 
             self.data.tdpData.state_lifetime = transitions["lifetime"]
             self.data.tdpData.state_before = transitions["e_before"]
@@ -797,6 +798,13 @@ class BaseWindow(QMainWindow):
             self.data.tdpData.state_lifetime = None
             self.data.tdpData.state_before = None
             self.data.tdpData.state_after = None
+
+        for trace in checkedTraces:
+            length = len(trace.get_intensities()[0])
+            n_valid = lib.math.count_valid_frames(
+                length, trace.first_bleach, trace.blink_intervals
+            )
+            self.data.histData.n_points += n_valid
 
     def exportTransitionDensityData(self):
         """
@@ -908,6 +916,10 @@ class BaseWindow(QMainWindow):
 
     def showAdvancedSortInspector(self):
         """Override in subclass"""
+        pass
+
+    def triggerBlink(self):
+        """Override in subclass."""
         pass
 
     def triggerBleach(self, color):

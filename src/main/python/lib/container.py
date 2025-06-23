@@ -12,7 +12,7 @@ multiprocessing.freeze_support()
 
 from global_variables import GlobalVariables as gvars
 from matplotlib.colors import LinearSegmentedColormap
-from typing import Union, Tuple, Optional
+from typing import Union, Tuple, Optional, List
 import numpy as np
 import pandas as pd
 import skimage.io
@@ -167,6 +167,7 @@ class TraceContainer:
         self.acc = TraceChannel(color="red")
 
         self.first_bleach = None  # int
+        self.blink_intervals = []  # type: List[Tuple[int, int]]
         self.zerobg = None  # type: (None, np.ndarray)
 
         self.fret = None  # type: Optional[np.ndarray]
@@ -310,7 +311,23 @@ class TraceContainer:
             self.grn.bleach = self.first_bleach
             self.acc.bleach = self.first_bleach
             # TODO: consider changing this to be a property of TraceContainer
+        except (ValueError, AttributeError):
+            pass
 
+        try:
+            blink = lib.utils.seek_line(
+                path=self.filename, line_starts="Blink intervals"
+            )
+            if blink is not None:
+                blink_str = blink.split(":")[-1].strip()
+                if blink_str != "None":
+                    intervals = []
+                    for pair in blink_str.split(";"):
+                        if not pair:
+                            continue
+                        start, end = pair.split("-")
+                        intervals.append([int(start), int(end)])
+                    self.blink_intervals = intervals
         except (ValueError, AttributeError):
             pass
 
@@ -401,16 +418,26 @@ class TraceContainer:
 
         self.load_successful = True
 
-    def get_intensities(self):
+    def get_intensities(self, apply_blink=False):
         """
-        Convenience function to return trace get_intensities
+        Convenience function to return trace intensities. If ``apply_blink`` is
+        ``True`` the data inside manually selected blinking intervals will be
+        zeroed for visualisation purposes.
         """
-        grn_int = self.grn.int  # type: Optional[np.ndarray]
-        grn_bg = self.grn.bg  # type: Optional[np.ndarray]
-        acc_int = self.acc.int  # type: Optional[np.ndarray]
-        acc_bg = self.acc.bg  # type: Optional[np.ndarray]
-        red_int = self.red.int  # type: Optional[np.ndarray]
-        red_bg = self.red.bg  # type: Optional[np.ndarray]
+        grn_int = self.grn.int.copy()  # type: Optional[np.ndarray]
+        grn_bg = self.grn.bg
+        acc_int = self.acc.int.copy()  # type: Optional[np.ndarray]
+        acc_bg = self.acc.bg
+        red_int = self.red.int.copy()  # type: Optional[np.ndarray]
+        red_bg = self.red.bg
+
+        if apply_blink and self.blink_intervals:
+            for start, end in self.blink_intervals:
+                if end is None:
+                    continue
+                grn_int[start:end] = 0
+                acc_int[start:end] = 0
+                red_int[start:end] = 0
 
         return grn_int, grn_bg, acc_int, acc_bg, red_int, red_bg
 
@@ -499,19 +526,28 @@ class TraceContainer:
         vid_txt = "Video filename: {}".format(self.video)
         id_txt = "FRET pair #{}".format(self.n)
         bl_txt = "Bleaches at {}".format(self.first_bleach)
+        if self.blink_intervals:
+            blink_str = ";".join(
+                f"{s}-{e}" for s, e in self.blink_intervals if e is not None
+            )
+        else:
+            blink_str = "None"
+        blink_txt = "Blink intervals: {}".format(blink_str)
 
         return (
             "{0}\n"
             "{1}\n"
             "{2}\n"
             "{3}\n"
-            "{4}\n\n"
-            "{5}".format(
+            "{4}\n"
+            "{5}\n\n"
+            "{6}".format(
                 exp_txt,
                 date_txt,
                 vid_txt,
                 id_txt,
                 bl_txt,
+                blink_txt,
                 df.to_csv(index=False, sep="\t", na_rep="NaN"),
             )
         )

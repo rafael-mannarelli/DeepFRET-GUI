@@ -66,6 +66,10 @@ class Ui_MenuBar(object):
         self.menuManually_Select_Bleaching.setObjectName(
             "menuManually_Select_Bleaching"
         )
+        self.menuManually_Select_Blinking = QtWidgets.QMenu(self.menuAnalyze)
+        self.menuManually_Select_Blinking.setObjectName(
+            "menuManually_Select_Blinking"
+        )
         self.menuPredict_Trace_Type = QtWidgets.QMenu(self.menuAnalyze)
         self.menuPredict_Trace_Type.setObjectName("menuPredict_Trace_Type")
         self.menuWindow = QtWidgets.QMenu(self.menuBar)
@@ -215,6 +219,11 @@ class Ui_MenuBar(object):
         self.actionSelect_Bleach_Green_Channel.setObjectName(
             "actionSelect_Bleach_Green_Channel"
         )
+        self.actionSelect_Blink_Interval = QtWidgets.QAction(MenuBar)
+        self.actionSelect_Blink_Interval.setEnabled(False)
+        self.actionSelect_Blink_Interval.setObjectName(
+            "actionSelect_Blink_Interval"
+        )
         self.actionAdvanced_Sort = QtWidgets.QAction(MenuBar)
         self.actionAdvanced_Sort.setEnabled(False)
         self.actionAdvanced_Sort.setObjectName("actionAdvanced_Sort")
@@ -273,6 +282,9 @@ class Ui_MenuBar(object):
         self.menuManually_Select_Bleaching.addAction(
             self.actionSelect_Bleach_Green_Channel
         )
+        self.menuManually_Select_Blinking.addAction(
+            self.actionSelect_Blink_Interval
+        )
         self.menuPredict_Trace_Type.addAction(
             self.actionPredict_Selected_Traces
         )
@@ -295,6 +307,9 @@ class Ui_MenuBar(object):
         self.menuAnalyze.addSeparator()
         self.menuAnalyze.addAction(
             self.menuManually_Select_Bleaching.menuAction()
+        )
+        self.menuAnalyze.addAction(
+            self.menuManually_Select_Blinking.menuAction()
         )
         self.menuAnalyze.addSeparator()
         self.menuAnalyze.addAction(self.actionFit_Hmm_Selected)
@@ -337,6 +352,9 @@ class Ui_MenuBar(object):
         self.menuAnalyze.setTitle(_translate("MenuBar", "Analyze"))
         self.menuManually_Select_Bleaching.setTitle(
             _translate("MenuBar", "Manually Select Bleaching")
+        )
+        self.menuManually_Select_Blinking.setTitle(
+            _translate("MenuBar", "Manually Select Blinking")
         )
         self.menuPredict_Trace_Type.setTitle(
             _translate("MenuBar", "Predict Trace Type")
@@ -496,6 +514,9 @@ class Ui_MenuBar(object):
         )
         self.actionSelect_Bleach_Green_Channel.setText(
             _translate("MenuBar", "Green Channel")
+        )
+        self.actionSelect_Blink_Interval.setText(
+            _translate("MenuBar", "Blink Interval")
         )
         self.actionAdvanced_Sort.setText(_translate("MenuBar", "Advanced Sort"))
         self.actionCheck_All.setText(_translate("MenuBar", "Check All"))

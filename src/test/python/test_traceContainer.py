@@ -141,3 +141,14 @@ class TestTraceContainer(TestCase):
         df2 = trace2.get_export_df()
 
         np.testing.assert_array_almost_equal(df["E"], df2["E"])
+
+    def test_blink_intervals_export_import(self):
+        self.addCleanup(os.remove, self.file_path)
+        filename = "../resources/traces/Trace.txt"
+        trace = TraceContainer(filename, loaded_from_ascii=True)
+        trace.tracename = self.file_name
+        trace.blink_intervals = [[5, 10], [20, 25]]
+        trace.export_trace_to_txt(dir_to_join=self.file_dir)
+        trace2 = TraceContainer(self.file_path, loaded_from_ascii=True)
+        self.assertTrue(trace2.load_successful)
+        self.assertEqual(trace.blink_intervals, trace2.blink_intervals)

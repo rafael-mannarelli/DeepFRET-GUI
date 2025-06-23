@@ -131,12 +131,21 @@ def corrected_ES(
 
 
 def drop_bleached_frames(
-    intensities, bleaches, max_frames=None, alpha=0, delta=0, beta=1, gamma=1
+    intensities,
+    bleaches,
+    max_frames=None,
+    alpha=0,
+    delta=0,
+    beta=1,
+    gamma=1,
+    blink_intervals=None,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Removes all frames after bleaching
-    """
+    """Removes data after bleaching and optionally excludes blinking intervals."""
+
     bleach = min_real(bleaches)
+
+    if bleach is None:
+        bleach = len(intensities[0])
 
     if beta == 1 and gamma == 1:
         E_trace = calc_E(intensities, alpha, delta)
@@ -147,7 +156,50 @@ def drop_bleached_frames(
     E_trace_ = E_trace[:bleach][:max_frames]
     S_trace_ = S_trace[:bleach][:max_frames]
 
+    if blink_intervals:
+        mask = np.ones_like(E_trace_, dtype=bool)
+        for start, end in blink_intervals:
+            if end is None:
+                continue
+            mask[start:end] = False
+        E_trace_ = E_trace_[mask]
+        S_trace_ = S_trace_[mask]
+
     return E_trace_, S_trace_
+
+
+def exclude_blink_intervals(array: np.ndarray, intervals: Optional[List[Tuple[int, int]]]):
+    """Return a copy of ``array`` without the regions specified in ``intervals``."""
+
+    if not intervals:
+        return array
+
+    mask = np.ones_like(array, dtype=bool)
+    for start, end in intervals:
+        if end is None:
+            continue
+        mask[start:end] = False
+
+    return array[mask]
+
+
+def count_valid_frames(length: int, bleach: Optional[int], intervals: Optional[List[Tuple[int, int]]]) -> int:
+    """Return the number of frames up to ``bleach`` excluding ``intervals``."""
+
+    if bleach is None or bleach > length:
+        bleach = length
+
+    mask = np.ones(bleach, dtype=bool)
+    if intervals:
+        for start, stop in intervals:
+            if stop is None:
+                continue
+            s = max(0, start)
+            e = min(stop, bleach)
+            if s < e:
+                mask[s:e] = False
+
+    return int(mask.sum())
 
 
 def alpha_factor(DD, DA):
