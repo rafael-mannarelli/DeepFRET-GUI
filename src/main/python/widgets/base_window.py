@@ -913,6 +913,10 @@ class BaseWindow(QMainWindow):
         """Override in subclass"""
         pass
 
+    def triggerBlink(self):
+        """Override in subclass."""
+        pass
+
     def triggerBleach(self, color):
         """Override in subclass."""
         pass
