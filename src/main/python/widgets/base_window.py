@@ -785,23 +785,9 @@ class BaseWindow(QMainWindow):
 
         try:
             transitions = pd.concat(
-                [trace.transitions for trace in checkedTraces]
+                [t.transitions for t in checkedTraces if t.transitions is not None]
             )
             transitions.reset_index(inplace=True)
-
-            for trace in checkedTraces:
-                end = trace.first_bleach
-                if end is None:
-                    end = len(trace.get_intensities()[0])
-
-                if trace.blink_intervals:
-                    for start, stop in trace.blink_intervals:
-                        if stop is None:
-                            continue
-                        if start < end:
-                            end -= max(0, min(stop, end) - start)
-
-                self.data.histData.n_points += end
 
             self.data.tdpData.state_lifetime = transitions["lifetime"]
             self.data.tdpData.state_before = transitions["e_before"]
@@ -811,6 +797,20 @@ class BaseWindow(QMainWindow):
             self.data.tdpData.state_lifetime = None
             self.data.tdpData.state_before = None
             self.data.tdpData.state_after = None
+
+        for trace in checkedTraces:
+            end = trace.first_bleach
+            if end is None:
+                end = len(trace.get_intensities()[0])
+
+            if trace.blink_intervals:
+                for start, stop in trace.blink_intervals:
+                    if stop is None:
+                        continue
+                    if start < end:
+                        end -= max(0, min(stop, end) - start)
+
+            self.data.histData.n_points += end
 
     def exportTransitionDensityData(self):
         """
