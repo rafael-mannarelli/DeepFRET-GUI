@@ -804,11 +804,15 @@ class BaseWindow(QMainWindow):
                 end = len(trace.get_intensities()[0])
 
             if trace.blink_intervals:
+                mask = np.ones(end, dtype=bool)
                 for start, stop in trace.blink_intervals:
                     if stop is None:
                         continue
-                    if start < end:
-                        end -= max(0, min(stop, end) - start)
+                    s = max(0, start)
+                    e = min(stop, end)
+                    if s < e:
+                        mask[s:e] = False
+                end = int(mask.sum())
 
             self.data.histData.n_points += end
 
