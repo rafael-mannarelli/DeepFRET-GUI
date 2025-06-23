@@ -402,10 +402,11 @@ class TraceContainer:
 
         self.load_successful = True
 
-    def get_intensities(self, apply_blink=True):
+    def get_intensities(self, apply_blink=False):
         """
-        Convenience function to return trace intensities
-        Optionally applies manual blinking intervals by zeroing the signal.
+        Convenience function to return trace intensities. If ``apply_blink`` is
+        ``True`` the data inside manually selected blinking intervals will be
+        zeroed for visualisation purposes.
         """
         grn_int = self.grn.int.copy()  # type: Optional[np.ndarray]
         grn_bg = self.grn.bg

@@ -131,11 +131,17 @@ def corrected_ES(
 
 
 def drop_bleached_frames(
-    intensities, bleaches, max_frames=None, alpha=0, delta=0, beta=1, gamma=1
+    intensities,
+    bleaches,
+    max_frames=None,
+    alpha=0,
+    delta=0,
+    beta=1,
+    gamma=1,
+    blink_intervals=None,
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Removes all frames after bleaching
-    """
+    """Removes data after bleaching and optionally excludes blinking intervals."""
+
     bleach = min_real(bleaches)
 
     if beta == 1 and gamma == 1:
@@ -146,6 +152,15 @@ def drop_bleached_frames(
 
     E_trace_ = E_trace[:bleach][:max_frames]
     S_trace_ = S_trace[:bleach][:max_frames]
+
+    if blink_intervals:
+        mask = np.ones_like(E_trace_, dtype=bool)
+        for start, end in blink_intervals:
+            if end is None:
+                continue
+            mask[start:end] = False
+        E_trace_ = E_trace_[mask]
+        S_trace_ = S_trace_[mask]
 
     return E_trace_, S_trace_
 

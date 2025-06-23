@@ -224,6 +224,7 @@ class HistogramWindow(BaseWindow):
                 alpha=alpha,
                 delta=delta,
                 max_frames=n_first_frames,
+                blink_intervals=trace.blink_intervals,
             )
             E_app.extend(E)
             S_app.extend(S)
@@ -259,6 +260,7 @@ class HistogramWindow(BaseWindow):
                         beta=beta,
                         gamma=gamma,
                         max_frames=n_first_frames,
+                        blink_intervals=trace.blink_intervals,
                     )
                     E_real.extend(E)
                     S_real.extend(S)
