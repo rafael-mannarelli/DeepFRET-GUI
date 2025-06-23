@@ -790,7 +790,18 @@ class BaseWindow(QMainWindow):
             transitions.reset_index(inplace=True)
 
             for trace in checkedTraces:
-                self.data.histData.n_points += trace.first_bleach
+                end = trace.first_bleach
+                if end is None:
+                    end = len(trace.get_intensities()[0])
+
+                if trace.blink_intervals:
+                    for start, stop in trace.blink_intervals:
+                        if stop is None:
+                            continue
+                        if start < end:
+                            end -= max(0, min(stop, end) - start)
+
+                self.data.histData.n_points += end
 
             self.data.tdpData.state_lifetime = transitions["lifetime"]
             self.data.tdpData.state_before = transitions["e_before"]

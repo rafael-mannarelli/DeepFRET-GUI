@@ -498,6 +498,20 @@ class TraceWindow(BaseWindow):
                     self.currentTrace().hmm = None
                     self.refreshPlot()
 
+                    histogram_window = self.windows[gvars.HistogramWindow]
+                    transition_density_window = self.windows[gvars.TransitionDensityWindow]
+
+                    histogram_window.getHistogramData()
+                    histogram_window.gauss_params = None
+                    if histogram_window.isVisible():
+                        histogram_window.refreshPlot()
+
+                    histogram_window.setPooledLifetimes()
+                    transition_density_window.setClusteredTransitions()
+
+                    if transition_density_window.isVisible():
+                        transition_density_window.refreshPlot()
+
         # Disconnect bleach event handler
         self.canvas.mpl_disconnect(self.cid)
 
@@ -526,6 +540,20 @@ class TraceWindow(BaseWindow):
                         trace.blink_intervals[-1][1] = clickedx
                         trace.hmm = None
                     self.refreshPlot()
+
+                    histogram_window = self.windows[gvars.HistogramWindow]
+                    transition_density_window = self.windows[gvars.TransitionDensityWindow]
+
+                    histogram_window.getHistogramData()
+                    histogram_window.gauss_params = None
+                    if histogram_window.isVisible():
+                        histogram_window.refreshPlot()
+
+                    histogram_window.setPooledLifetimes()
+                    transition_density_window.setClusteredTransitions()
+
+                    if transition_density_window.isVisible():
+                        transition_density_window.refreshPlot()
 
         if self.currentTrace().blink_intervals and self.currentTrace().blink_intervals[-1][1] is not None:
             self.canvas.mpl_disconnect(self.cid)
