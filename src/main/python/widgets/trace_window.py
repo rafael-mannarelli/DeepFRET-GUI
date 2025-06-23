@@ -117,6 +117,7 @@ class TraceWindow(BaseWindow):
             self.ui.actionClear_Correction_Factors,
             self.ui.actionSelect_Bleach_Red_Channel,
             self.ui.actionSelect_Bleach_Green_Channel,
+            self.ui.actionSelect_Blink_Interval,
             self.ui.actionFit_Hmm_Selected,
             self.ui.actionPredict_Selected_Traces,
             self.ui.actionPredict_All_traces,
@@ -506,6 +507,33 @@ class TraceWindow(BaseWindow):
         )
         self.setCursor(Qt.ArrowCursor)
 
+    def triggerBlink(self):
+        """Sets the matplotlib event handler for manual blinking."""
+        self.cid = self.canvas.mpl_disconnect(self.cid)
+        self.cid = self.canvas.mpl_connect("button_press_event", self.selectBlink)
+        self.setCursor(Qt.CrossCursor)
+
+    def selectBlink(self, event):
+        """Manually select start and end of a blinking interval."""
+        if self.currName is not None:
+            for n, ax in enumerate(self.canvas.axes):
+                if ax == event.inaxes and n in [1, 2]:
+                    clickedx = int(event.xdata)
+                    trace = self.currentTrace()
+                    if not trace.blink_intervals or trace.blink_intervals[-1][1] is not None:
+                        trace.blink_intervals.append([clickedx, None])
+                    else:
+                        trace.blink_intervals[-1][1] = clickedx
+                        trace.hmm = None
+                    self.refreshPlot()
+
+        if self.currentTrace().blink_intervals and self.currentTrace().blink_intervals[-1][1] is not None:
+            self.canvas.mpl_disconnect(self.cid)
+            self.cid = self.canvas.mpl_connect(
+                "button_press_event", self.selectCorrectionFactorRange
+            )
+            self.setCursor(Qt.ArrowCursor)
+
     def clearListModel(self):
         """
         Clears the internal data of the listModel. Call this before total
@@ -802,6 +830,15 @@ class TraceWindow(BaseWindow):
                         alpha=0.3,
                         zorder=0,
                     )
+                    for start, end in trace.blink_intervals:
+                        if end is not None:
+                            ax.axvspan(
+                                start,
+                                end,
+                                color="lightgrey",
+                                alpha=0.5,
+                                zorder=1,
+                            )
 
                 ax.plot(trace.frames, signal, color=color)
 
@@ -839,6 +876,15 @@ class TraceWindow(BaseWindow):
                     alpha=0.4,
                     zorder=0,
                 )
+                for start, end in trace.blink_intervals:
+                    if end is not None:
+                        ax.axvspan(
+                            start,
+                            end,
+                            color="lightgrey",
+                            alpha=0.5,
+                            zorder=1,
+                        )
 
                 ax.set_ylim(-0.1, 1.1)
                 ax.set_ylabel(label)

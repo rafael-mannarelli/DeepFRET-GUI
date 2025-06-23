@@ -174,6 +174,9 @@ class BaseWindow(QMainWindow):
         for f in (partial(self.triggerBleach, "green"), self.refreshPlot):
             self.ui.actionSelect_Bleach_Green_Channel.triggered.connect(f)
 
+        for f in (self.triggerBlink, self.refreshPlot):
+            self.ui.actionSelect_Blink_Interval.triggered.connect(f)
+
         # self.ui.actionFit_Hmm_Current.triggered.connect(
         #     partial(self.fitSingleTraceHiddenMarkovModel, True)
         # )

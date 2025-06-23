@@ -12,7 +12,7 @@ multiprocessing.freeze_support()
 
 from global_variables import GlobalVariables as gvars
 from matplotlib.colors import LinearSegmentedColormap
-from typing import Union, Tuple, Optional
+from typing import Union, Tuple, Optional, List
 import numpy as np
 import pandas as pd
 import skimage.io
@@ -167,6 +167,7 @@ class TraceContainer:
         self.acc = TraceChannel(color="red")
 
         self.first_bleach = None  # int
+        self.blink_intervals = []  # type: List[Tuple[int, int]]
         self.zerobg = None  # type: (None, np.ndarray)
 
         self.fret = None  # type: Optional[np.ndarray]
@@ -401,16 +402,25 @@ class TraceContainer:
 
         self.load_successful = True
 
-    def get_intensities(self):
+    def get_intensities(self, apply_blink=True):
         """
-        Convenience function to return trace get_intensities
+        Convenience function to return trace intensities
+        Optionally applies manual blinking intervals by zeroing the signal.
         """
-        grn_int = self.grn.int  # type: Optional[np.ndarray]
-        grn_bg = self.grn.bg  # type: Optional[np.ndarray]
-        acc_int = self.acc.int  # type: Optional[np.ndarray]
-        acc_bg = self.acc.bg  # type: Optional[np.ndarray]
-        red_int = self.red.int  # type: Optional[np.ndarray]
-        red_bg = self.red.bg  # type: Optional[np.ndarray]
+        grn_int = self.grn.int.copy()  # type: Optional[np.ndarray]
+        grn_bg = self.grn.bg
+        acc_int = self.acc.int.copy()  # type: Optional[np.ndarray]
+        acc_bg = self.acc.bg
+        red_int = self.red.int.copy()  # type: Optional[np.ndarray]
+        red_bg = self.red.bg
+
+        if apply_blink and self.blink_intervals:
+            for start, end in self.blink_intervals:
+                if end is None:
+                    continue
+                grn_int[start:end] = 0
+                acc_int[start:end] = 0
+                red_int[start:end] = 0
 
         return grn_int, grn_bg, acc_int, acc_bg, red_int, red_bg
 
