@@ -178,6 +178,10 @@ class BaseWindow(QMainWindow):
         for f in (self.triggerBlink, self.refreshPlot):
             self.ui.actionSelect_Blink_Interval.triggered.connect(f)
 
+        self.ui.actionClear_Blink_Intervals.triggered.connect(
+            self.clearBlinkIntervals
+        )
+
         # self.ui.actionFit_Hmm_Current.triggered.connect(
         #     partial(self.fitSingleTraceHiddenMarkovModel, True)
         # )
@@ -919,6 +923,10 @@ class BaseWindow(QMainWindow):
         pass
 
     def triggerBlink(self):
+        """Override in subclass."""
+        pass
+
+    def clearBlinkIntervals(self):
         """Override in subclass."""
         pass
 
