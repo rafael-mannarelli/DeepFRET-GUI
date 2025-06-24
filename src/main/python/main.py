@@ -17,6 +17,8 @@ from widgets.video_window import VideoWindow
 
 multiprocessing.freeze_support()
 
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import sys
 from typing import Union
 import matplotlib
