@@ -322,6 +322,15 @@ release](https://github.com/hatzakislab/DeepFRET-GUI/releases/new) pointing to
 your newly created tag. Attach `DeepFRET.dmg` and `DeepFRETSetup.exe` as
 binaries during the release.
 
+### Using the classification model in MATLAB
+
+If you wish to run the DeepFRET trace classifier outside the GUI, a MATLAB
+example is provided in `matlab/deepfret_classify_example.m`. The script shows how
+to import the bundled `.h5` models with `importKerasNetwork`, normalise traces
+identically to the Python code and compute the overall class probabilities.
+Simply adjust `model2CPath` and `model3CPath` to point to the model files and
+follow the example at the bottom of the script to classify your own traces.
+
 ## About fbs and PyInstaller
 
 We have to inject some extra hooks into PyInstaller. Unfortunately `fbs` does
