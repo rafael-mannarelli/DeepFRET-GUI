@@ -224,6 +224,11 @@ class Ui_MenuBar(object):
         self.actionSelect_Blink_Interval.setObjectName(
             "actionSelect_Blink_Interval"
         )
+        self.actionClear_Blink_Intervals = QtWidgets.QAction(MenuBar)
+        self.actionClear_Blink_Intervals.setEnabled(False)
+        self.actionClear_Blink_Intervals.setObjectName(
+            "actionClear_Blink_Intervals"
+        )
         self.actionAdvanced_Sort = QtWidgets.QAction(MenuBar)
         self.actionAdvanced_Sort.setEnabled(False)
         self.actionAdvanced_Sort.setObjectName("actionAdvanced_Sort")
@@ -284,6 +289,9 @@ class Ui_MenuBar(object):
         )
         self.menuManually_Select_Blinking.addAction(
             self.actionSelect_Blink_Interval
+        )
+        self.menuManually_Select_Blinking.addAction(
+            self.actionClear_Blink_Intervals
         )
         self.menuPredict_Trace_Type.addAction(
             self.actionPredict_Selected_Traces
@@ -517,6 +525,9 @@ class Ui_MenuBar(object):
         )
         self.actionSelect_Blink_Interval.setText(
             _translate("MenuBar", "Blink Interval")
+        )
+        self.actionClear_Blink_Intervals.setText(
+            _translate("MenuBar", "Clear Blink Intervals")
         )
         self.actionAdvanced_Sort.setText(_translate("MenuBar", "Advanced Sort"))
         self.actionCheck_All.setText(_translate("MenuBar", "Check All"))

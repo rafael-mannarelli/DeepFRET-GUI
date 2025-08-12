@@ -118,6 +118,7 @@ class TraceWindow(BaseWindow):
             self.ui.actionSelect_Bleach_Red_Channel,
             self.ui.actionSelect_Bleach_Green_Channel,
             self.ui.actionSelect_Blink_Interval,
+            self.ui.actionClear_Blink_Intervals,
             self.ui.actionFit_Hmm_Selected,
             self.ui.actionPredict_Selected_Traces,
             self.ui.actionPredict_All_traces,
@@ -766,6 +767,29 @@ class TraceWindow(BaseWindow):
 
         self.clearMarkerLines()
         self.refreshPlot()
+
+    def clearBlinkIntervals(self):
+        """Clear manually selected blink intervals for the current trace."""
+        if self.currName is not None:
+            trace = self.currentTrace()
+            trace.blink_intervals = []
+            trace.hmm = None
+
+            self.refreshPlot()
+
+            histogram_window = self.windows[gvars.HistogramWindow]
+            transition_density_window = self.windows[gvars.TransitionDensityWindow]
+
+            histogram_window.getHistogramData()
+            histogram_window.gauss_params = None
+            if histogram_window.isVisible():
+                histogram_window.refreshPlot()
+
+            histogram_window.setPooledLifetimes()
+            transition_density_window.setClusteredTransitions()
+
+            if transition_density_window.isVisible():
+                transition_density_window.refreshPlot()
 
     def getCurrentLines(self, ax):
         """Get labels of currently plotted lines"""

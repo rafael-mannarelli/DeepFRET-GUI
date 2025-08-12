@@ -135,6 +135,7 @@
       <string>Manually Select Blinking</string>
      </property>
      <addaction name="actionSelect_Blink_Interval"/>
+     <addaction name="actionClear_Blink_Intervals"/>
     </widget>
     <widget class="QMenu" name="menuPredict_Trace_Type">
      <property name="title">
@@ -596,6 +597,14 @@
    </property>
    <property name="text">
     <string>Blink Interval</string>
+   </property>
+  </action>
+  <action name="actionClear_Blink_Intervals">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Clear Blink Intervals</string>
    </property>
   </action>
   <action name="actionAdvanced_Sort">
